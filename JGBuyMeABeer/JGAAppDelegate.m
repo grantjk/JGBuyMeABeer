@@ -7,40 +7,107 @@
 //
 
 #import "JGAAppDelegate.h"
+@import CoreLocation;
+
+@interface JGAAppDelegate () <CLLocationManagerDelegate>
+@property (nonatomic, strong) CLLocationManager *locationManager;
+@property (nonatomic, strong) UILocalNotification *notification;
+@end
+
+static NSString * beaconRegionUUID = @"E132EBAE-AB52-4ABD-B6A8-6B7C65BA407D";
+static NSString * beaconRegionIdentifier = @"ca.jg.buymeabeer";
+
+# define BEACON_MAJOR 1
+# define BEACON_MINOR 3
 
 @implementation JGAAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Override point for customization after application launch.
+
+    self.locationManager = [[CLLocationManager alloc] init];
+    self.locationManager.delegate = self;
+    
+    NSUUID *uuid = [[NSUUID alloc] initWithUUIDString:beaconRegionUUID];
+    CLBeaconRegion *region = [[CLBeaconRegion alloc] initWithProximityUUID:uuid
+                                                                     major:BEACON_MAJOR
+                                                                     minor:BEACON_MINOR
+                                                                identifier:beaconRegionIdentifier];
+    region.notifyOnEntry = YES;
+    region.notifyOnExit = YES;
+    region.notifyEntryStateOnDisplay = YES;
+
+    [self.locationManager startMonitoringForRegion:region];
+    [self.locationManager requestStateForRegion:region];
+    
     return YES;
 }
 							
-- (void)applicationWillResignActive:(UIApplication *)application
-{
-    // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
-    // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
+#pragma mark - CLLocationManagerDelegate
+
+- (void)locationManager:(CLLocationManager *)manager didDetermineState:(CLRegionState)state forRegion:(CLRegion *)region {
+    NSLog(@"state: %d", state);
+    
+    if (state == CLRegionStateInside) {
+        [self.locationManager startRangingBeaconsInRegion:(CLBeaconRegion*)region];
+    }else if (state == CLRegionStateOutside) {
+        [self hideNotification];
+    }
 }
 
-- (void)applicationDidEnterBackground:(UIApplication *)application
-{
-    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
-    // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+- (void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region {
+    if ([region isKindOfClass:[CLBeaconRegion class]]) {
+        CLBeaconRegion *beaconRegion = (CLBeaconRegion *)region;
+        if ([beaconRegion.identifier isEqualToString:beaconRegionIdentifier]) {
+            [self.locationManager startRangingBeaconsInRegion:beaconRegion];
+        }
+    }
+}
+- (void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region {
+    if ([region isKindOfClass:[CLBeaconRegion class]]) {
+        CLBeaconRegion *beaconRegion = (CLBeaconRegion *)region;
+        if ([beaconRegion.identifier isEqualToString:beaconRegionIdentifier]) {
+            [self hideNotification];
+        }
+    }
 }
 
-- (void)applicationWillEnterForeground:(UIApplication *)application
+- (void)locationManager:(CLLocationManager *)manager didRangeBeacons:(NSArray *)beacons inRegion:(CLBeaconRegion *)region
 {
-    // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+    for (CLBeacon *beacon in beacons) {
+        NSLog(@"ranging beacon....%@", beacon);
+        if (beacon.proximity == CLProximityNear || beacon.proximity == CLProximityImmediate) {
+            [self showNotification];
+        }else{
+            [self hideNotification];
+        }
+    }
 }
 
-- (void)applicationDidBecomeActive:(UIApplication *)application
+- (void)showNotification
 {
-    // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    NSLog(@"here");
+    if (!self.notification && [[UIApplication sharedApplication] applicationState] != UIApplicationStateActive) {
+        
+        NSLog(@"creating");
+        self.notification = [[UILocalNotification alloc] init];
+        self.notification.alertBody = @"HEY YOU! You're passing my desk! Bring me a beer next time!";
+        self.notification.alertAction = @"I'm on it";
+        self.notification.soundName = @"horn.caf";
+        NSLog(@"showing");
+        [[UIApplication sharedApplication] presentLocalNotificationNow:self.notification];
+    }
 }
 
-- (void)applicationWillTerminate:(UIApplication *)application
+- (void)hideNotification
 {
-    // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    if (self.notification) {
+        NSLog(@"cancelling");
+        [[UIApplication sharedApplication] cancelLocalNotification:self.notification];
+        self.notification = nil;        
+    }
 }
+
+
 
 @end

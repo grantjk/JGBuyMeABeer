@@ -22,6 +22,7 @@
 		7BE4E58018C96D0300A2AA38 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BE4E55F18C96D0200A2AA38 /* UIKit.framework */; };
 		7BE4E58818C96D0300A2AA38 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7BE4E58618C96D0300A2AA38 /* InfoPlist.strings */; };
 		7BE4E58A18C96D0300A2AA38 /* JGBuyMeABeerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BE4E58918C96D0300A2AA38 /* JGBuyMeABeerTests.m */; };
+		7BE4E59A18C97AE100A2AA38 /* horn.caf in Resources */ = {isa = PBXBuildFile; fileRef = 7BE4E59918C97AE100A2AA38 /* horn.caf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +56,7 @@
 		7BE4E58518C96D0300A2AA38 /* JGBuyMeABeerTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "JGBuyMeABeerTests-Info.plist"; sourceTree = "<group>"; };
 		7BE4E58718C96D0300A2AA38 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		7BE4E58918C96D0300A2AA38 /* JGBuyMeABeerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JGBuyMeABeerTests.m; sourceTree = "<group>"; };
+		7BE4E59918C97AE100A2AA38 /* horn.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = horn.caf; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,6 +131,7 @@
 		7BE4E56218C96D0200A2AA38 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				7BE4E59918C97AE100A2AA38 /* horn.caf */,
 				7BE4E56318C96D0200A2AA38 /* JGBuyMeABeer-Info.plist */,
 				7BE4E56418C96D0200A2AA38 /* InfoPlist.strings */,
 				7BE4E56718C96D0200A2AA38 /* main.m */,
@@ -235,6 +238,7 @@
 				7BE4E57218C96D0200A2AA38 /* Main_iPad.storyboard in Resources */,
 				7BE4E57718C96D0200A2AA38 /* Images.xcassets in Resources */,
 				7BE4E56F18C96D0200A2AA38 /* Main_iPhone.storyboard in Resources */,
+				7BE4E59A18C97AE100A2AA38 /* horn.caf in Resources */,
 				7BE4E56618C96D0200A2AA38 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
