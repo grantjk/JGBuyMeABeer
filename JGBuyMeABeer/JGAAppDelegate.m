@@ -46,7 +46,7 @@ static NSString * beaconRegionIdentifier = @"ca.jg.buymeabeer";
 #pragma mark - CLLocationManagerDelegate
 
 - (void)locationManager:(CLLocationManager *)manager didDetermineState:(CLRegionState)state forRegion:(CLRegion *)region {
-    NSLog(@"state: %d", state);
+//    NSLog(@"state: %d", state);
     
     if (state == CLRegionStateInside) {
         [self.locationManager startRangingBeaconsInRegion:(CLBeaconRegion*)region];
